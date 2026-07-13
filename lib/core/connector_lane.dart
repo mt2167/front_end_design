@@ -23,7 +23,7 @@ class ConnectorLane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 22,
+      width: 30,
       height: double.infinity,
       child: Column(
         children: [
@@ -58,8 +58,8 @@ class _ConnectorSegmentPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final panelX = direction == ConnectorDirection.towardRight ? 2.0 : size.width - 2.0;
-    final coreX = direction == ConnectorDirection.towardRight ? size.width - 2.0 : 2.0;
+    final panelX = direction == ConnectorDirection.towardRight ? 4.0 : size.width - 4.0;
+    final coreX = direction == ConnectorDirection.towardRight ? size.width - 4.0 : 4.0;
     final y = size.height / 2;
 
     final nodeCenter = Offset(panelX, y);
@@ -69,23 +69,23 @@ class _ConnectorSegmentPainter extends CustomPainter {
     final nodePulse = 0.6 + 0.4 * sin(time * 2.2 + phase * 10);
     canvas.drawCircle(
       nodeCenter,
-      2.6,
-      Paint()..color = AppColors.cyan.withOpacity(0.3 + 0.3 * nodePulse),
+      10,
+      Paint()..color = AppColors.cyan.withOpacity(0.35 + 0.35 * nodePulse),
     );
     canvas.drawCircle(
       nodeCenter,
-      1.1,
-      Paint()..color = AppColors.cyanBright.withOpacity(0.8),
+      5,
+      Paint()..color = AppColors.cyanBright.withOpacity(0.9),
     );
 
     // Dashed line from node toward the core.
     final dashPaint = Paint()
-      ..color = AppColors.panelBorderBright.withOpacity(0.7)
-      ..strokeWidth = 1;
-    const dashLen = 3.0;
+      ..color = AppColors.panelBorderBright.withOpacity(0.75)
+      ..strokeWidth = 2;
+    const dashLen = 2.0;
     const gapLen = 3.0;
     final dx = coreEdge.dx - nodeCenter.dx;
-    final totalLen = dx.abs();
+    final totalLen = dx.abs() + 100; // Extend beyond the core edge for a nice fade-out effect.
     double covered = 0;
     final dir = dx.sign;
     while (covered < totalLen) {
@@ -102,8 +102,8 @@ class _ConnectorSegmentPainter extends CustomPainter {
     final fade = sin(t * pi).clamp(0.0, 1.0);
     canvas.drawCircle(
       Offset(pulseX, y),
-      1.5,
-      Paint()..color = AppColors.cyanBright.withOpacity(0.85 * fade),
+      2.6,
+      Paint()..color = AppColors.cyanBright.withOpacity(0.9 * fade),
     );
   }
 

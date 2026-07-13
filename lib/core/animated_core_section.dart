@@ -52,9 +52,9 @@ class _AnimatedCoreSectionState extends State<AnimatedCoreSection>
           direction: ConnectorDirection.towardRight,
           time: _time,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 6),
         const Expanded(child: NeuralCore()),
-        const SizedBox(width: 4),
+        const SizedBox(width: 6),
         ConnectorLane(
           weights: widget.rightWeights,
           direction: ConnectorDirection.towardLeft,

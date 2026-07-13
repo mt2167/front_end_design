@@ -51,25 +51,25 @@ class NeuralNetPainter extends CustomPainter {
 
   NeuralNetPainter({
     required this.time,
-    this.neuronCount = 90,
+    this.neuronCount = 50,
     this.seed = 42,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final maxRadius = min(size.width, size.height) / 2;
+    final maxRadius = min(size.width, size.height) / 1.5;
     final rnd = Random(seed);
 
     // ---- Rotating segmented outer rings ----
-    for (int ringIdx = 0; ringIdx < 3; ringIdx++) {
-      final ringFactor = [0.99, 0.85, 0.70][ringIdx];
-      final rotSpeed = [0.05, -0.08, 0.11][ringIdx];
+    for (int ringIdx = 0; ringIdx < 4; ringIdx++) {
+      final ringFactor = [1.0, 0.88, 0.8, 0.70][ringIdx];
+      final rotSpeed = [0.05, -0.08, 0.11, -0.14][ringIdx];
       final radius = maxRadius * ringFactor;
       final ringPaint = Paint()
-        ..color = AppColors.cyan.withOpacity(0.16)
+        ..color = AppColors.cyan.withOpacity(0.4)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1;
+        ..strokeWidth = 1.3;
       const segments = 44;
       final rotation = time * rotSpeed * 2 * pi;
       for (int i = 0; i < segments; i++) {
@@ -88,20 +88,20 @@ class NeuralNetPainter extends CustomPainter {
 
     // One brighter accent ring with sweeping highlight arcs.
     final accentPaint = Paint()
-      ..color = AppColors.cyanBright.withOpacity(0.55)
+      ..color = AppColors.cyanBright.withOpacity(0.6)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.2
+      ..strokeWidth = 2.8
       ..strokeCap = StrokeCap.round;
     final sweep = time * 0.16 * 2 * pi;
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: maxRadius * 0.99),
+      Rect.fromCircle(center: center, radius: maxRadius * 1),
       sweep,
       0.5,
       false,
       accentPaint,
     );
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: maxRadius * 0.99),
+      Rect.fromCircle(center: center, radius: maxRadius * 1),
       sweep + pi,
       0.35,
       false,
@@ -112,11 +112,11 @@ class NeuralNetPainter extends CustomPainter {
     final neurons = <_Neuron>[];
     for (int i = 0; i < neuronCount; i++) {
       // Bias distribution: dense cluster near center, sparser toward edge.
-      final rBias = pow(rnd.nextDouble(), 1.7).toDouble();
+      final rBias = pow(rnd.nextDouble(), 1.15).toDouble();
       neurons.add(_Neuron(
         angle: rnd.nextDouble() * 2 * pi,
-        radiusFrac: 0.08 + rBias * 0.92,
-        sizeFactor: 0.6 + rnd.nextDouble() * 1.0,
+        radiusFrac: 0.16 + rBias * 0.8,
+        sizeFactor: 1.4 + rnd.nextDouble() * 1.8,
         phase: rnd.nextDouble() * 2 * pi,
         warm: rnd.nextDouble() < 0.1,
       ));
@@ -135,12 +135,12 @@ class NeuralNetPainter extends CustomPainter {
 
     // ---- Connect nearby neurons with curved synapses ----
     final synapses = <_Synapse>[];
-    final connectThreshold = maxRadius * 0.28;
+    final connectThreshold = maxRadius * 0.22;
     for (int i = 0; i < neurons.length; i++) {
       int connections = 0;
-      for (int j = i + 1; j < neurons.length && connections < 3; j++) {
+      for (int j = i + 1; j < neurons.length && connections < 2; j++) {
         final d = (positions[i] - positions[j]).distance;
-        if (d < connectThreshold && rnd.nextDouble() < 0.5) {
+        if (d < connectThreshold && rnd.nextDouble() < 0.42) {
           synapses.add(_Synapse(
             from: i,
             to: j,
@@ -154,7 +154,7 @@ class NeuralNetPainter extends CustomPainter {
 
     final linePaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.7;
+      ..strokeWidth = 0.9;
 
     final controlPoints = <Offset>[];
     for (final s in synapses) {
@@ -162,7 +162,7 @@ class NeuralNetPainter extends CustomPainter {
       final p2 = positions[s.to];
       final mid = Offset.lerp(p0, p2, 0.5)!;
       final normal = Offset(-(p2.dy - p0.dy), p2.dx - p0.dx);
-      final normalLen = normal.distance == 0 ? 1 : normal.distance;
+      final normalLen = normal.distance == 0 ? 1.0 : normal.distance;
       final wobble = sin(time * 0.8 + s.phase * 10) * (p0 - p2).distance * 0.08;
       final control = mid + (normal / normalLen) * wobble;
       controlPoints.add(control);
@@ -176,7 +176,7 @@ class NeuralNetPainter extends CustomPainter {
     // ---- Traveling signal pulses along a subset of synapses ----
     final pulsePaint = Paint();
     for (int i = 0; i < synapses.length; i++) {
-      if (i % 2 != 0) continue; // only fire on half the synapses
+      if (i % 3 != 0) continue; // only fire on a subset of synapses
       final s = synapses[i];
       final p0 = positions[s.from];
       final p2 = positions[s.to];
@@ -184,8 +184,8 @@ class NeuralNetPainter extends CustomPainter {
       final t = ((time * s.speed) + s.phase) % 1.0;
       final pos = _quadraticPoint(p0, control, p2, t);
       final fade = sin(t * pi); // fades in/out along the path
-      pulsePaint.color = AppColors.cyanBright.withOpacity(0.7 * fade.clamp(0.0, 1.0));
-      canvas.drawCircle(pos, 1.6, pulsePaint);
+      pulsePaint.color = AppColors.cyanBright.withOpacity(0.8 * fade.clamp(0.0, 1.0));
+      canvas.drawCircle(pos, 2.4, pulsePaint);
     }
 
     // ---- Draw neuron nodes ----
@@ -198,17 +198,17 @@ class NeuralNetPainter extends CustomPainter {
       final brightness = (1.0 - distFromCenter * 0.6).clamp(0.3, 1.0);
 
       final glowPaint = Paint()
-        ..color = color.withOpacity(0.12 * brightness)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.5);
-      canvas.drawCircle(pos, n.sizeFactor * 3 * pulse, glowPaint);
+        ..color = color.withOpacity(0.16 * brightness)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3.5);
+      canvas.drawCircle(pos, n.sizeFactor * 4.5 * pulse, glowPaint);
 
-      final dotPaint = Paint()..color = color.withOpacity((0.5 + 0.4 * pulse) * brightness);
-      canvas.drawCircle(pos, n.sizeFactor * 1.1, dotPaint);
+      final dotPaint = Paint()..color = color.withOpacity((0.55 + 0.4 * pulse) * brightness);
+      canvas.drawCircle(pos, n.sizeFactor * 1.9, dotPaint);
     }
 
     // ---- Central breathing glow + core ----
     final breath = 1.0 + 0.09 * sin(time * 1.8);
-    final glowRadius = maxRadius * 0.34 * breath;
+    final glowRadius = maxRadius * 0.36 * breath;
     final glowPaint = Paint()
       ..shader = RadialGradient(
         colors: [
@@ -220,7 +220,7 @@ class NeuralNetPainter extends CustomPainter {
       ).createShader(Rect.fromCircle(center: center, radius: glowRadius));
     canvas.drawCircle(center, glowRadius, glowPaint);
 
-    canvas.drawCircle(center, 5 * breath, Paint()..color = Colors.white);
+    canvas.drawCircle(center, 7 * breath, Paint()..color = Colors.white);
   }
 
   @override

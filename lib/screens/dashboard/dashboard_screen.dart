@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme.dart';
 import '../../core/widgets.dart';
 import '../../core/painters.dart';
+import '../../core/animated_core_section.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -31,7 +32,7 @@ class DashboardScreen extends StatelessWidget {
                     children: const [
                       Expanded(flex: 3, child: _LeftColumn()),
                       SizedBox(width: 14),
-                      Expanded(flex: 4, child: _CenterColumn()),
+                      Expanded(flex: 5, child: _CenterColumn()),
                       SizedBox(width: 14),
                       Expanded(flex: 3, child: _RightColumn()),
                     ],
@@ -385,19 +386,21 @@ class _CenterColumn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _aiCoreHeader(),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Expanded(
-          child: MiniChart(
-            width: double.infinity,
-            height: double.infinity,
-            painter: NeuralSpherePainter(),
+          child: AnimatedCoreSection(
+            // Rough relative heights of the left/right panels, so the
+            // connector nodes land at approximately the right vertical
+            // position next to the panel they represent.
+            leftWeights: const [13, 10, 10, 10, 10, 15],
+            rightWeights: const [20, 10, 10, 10, 10, 12],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         _cognitiveLoadBar(),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         _systemOverviewPanel(),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         _advisorAgentsPanel(),
       ],
     );
