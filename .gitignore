@@ -8,6 +8,7 @@ build/
 .pub-cache/
 .pub/
 /pubspec.lock
+.tools/
 
 # IDE
 .idea/

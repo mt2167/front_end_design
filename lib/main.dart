@@ -16,7 +16,6 @@ class JarvisApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: AppColors.background,
-        fontFamily: 'Roboto',
       ),
       home: const DashboardScreen(),
     );
