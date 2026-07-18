@@ -70,17 +70,17 @@ class _ConnectorSegmentPainter extends CustomPainter {
     canvas.drawCircle(
       nodeCenter,
       10,
-      Paint()..color = AppColors.cyan.withOpacity(0.35 + 0.35 * nodePulse),
+      Paint()..color = AppColors.cyan.withValues(alpha: 0.35 + 0.35 * nodePulse),
     );
     canvas.drawCircle(
       nodeCenter,
       5,
-      Paint()..color = AppColors.cyanBright.withOpacity(0.9),
+      Paint()..color = AppColors.cyanBright.withValues(alpha: 0.9),
     );
 
     // Dashed line from node toward the core.
     final dashPaint = Paint()
-      ..color = AppColors.panelBorderBright.withOpacity(0.75)
+      ..color = AppColors.panelBorderBright.withValues(alpha: 0.75)
       ..strokeWidth = 2;
     const dashLen = 2.0;
     const gapLen = 3.0;
@@ -103,7 +103,7 @@ class _ConnectorSegmentPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(pulseX, y),
       2.6,
-      Paint()..color = AppColors.cyanBright.withOpacity(0.9 * fade),
+      Paint()..color = AppColors.cyanBright.withValues(alpha: 0.9 * fade),
     );
   }
 

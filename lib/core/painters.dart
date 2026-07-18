@@ -42,7 +42,7 @@ class SparklinePainter extends CustomPainter {
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [color.withOpacity(0.35), color.withOpacity(0.0)],
+          colors: [color.withValues(alpha: 0.35), color.withValues(alpha: 0.0)],
         ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
       canvas.drawPath(fillPath, fillPaint);
     }
@@ -72,7 +72,7 @@ class BarChartPainter extends CustomPainter {
     final maxV = values.reduce(max);
     final barWidth = size.width / (values.length * 1.6);
     final gap = barWidth * 0.6;
-    final paint = Paint()..color = color.withOpacity(0.85);
+    final paint = Paint()..color = color.withValues(alpha: 0.85);
 
     for (int i = 0; i < values.length; i++) {
       final h = maxV == 0 ? 0.0 : (values[i] / maxV) * size.height;
@@ -107,7 +107,7 @@ class WaveformPainter extends CustomPainter {
       final h = (values[i].clamp(0.05, 1.0)) * size.height;
       final x = i * (barWidth + gap) + barWidth / 2;
       final paint = Paint()
-        ..color = color.withOpacity(0.35 + 0.65 * values[i])
+        ..color = color.withValues(alpha: 0.35 + 0.65 * values[i])
         ..strokeCap = StrokeCap.round
         ..strokeWidth = barWidth.clamp(1.2, 4.0);
       canvas.drawLine(
@@ -188,7 +188,7 @@ class NetworkGraphPainter extends CustomPainter {
     );
 
     final linePaint = Paint()
-      ..color = color.withOpacity(0.25)
+      ..color = color.withValues(alpha: 0.25)
       ..strokeWidth = 0.8;
 
     for (int i = 0; i < points.length; i++) {
@@ -226,7 +226,7 @@ class NeuralSpherePainter extends CustomPainter {
     for (final ringFactor in [0.98, 0.84, 0.68]) {
       final radius = maxRadius * ringFactor;
       final ringPaint = Paint()
-        ..color = AppColors.cyan.withOpacity(0.16)
+        ..color = AppColors.cyan.withValues(alpha: 0.16)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1;
       const segments = 44;
@@ -246,7 +246,7 @@ class NeuralSpherePainter extends CustomPainter {
 
     // One brighter accent ring with a couple of thicker highlighted arcs.
     final accentPaint = Paint()
-      ..color = AppColors.cyanBright.withOpacity(0.55)
+      ..color = AppColors.cyanBright.withValues(alpha: 0.55)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.2
       ..strokeCap = StrokeCap.round;
@@ -280,11 +280,11 @@ class NeuralSpherePainter extends CustomPainter {
       );
 
       final linePaint = Paint()
-        ..color = color.withOpacity(opacity * 0.55)
+        ..color = color.withValues(alpha: opacity * 0.55)
         ..strokeWidth = 0.7;
       canvas.drawLine(center, end, linePaint);
 
-      final dotPaint = Paint()..color = color.withOpacity((opacity + 0.25).clamp(0.0, 1.0));
+      final dotPaint = Paint()..color = color.withValues(alpha: (opacity + 0.25).clamp(0.0, 1.0));
       canvas.drawCircle(end, isOrange ? 1.8 : 1.3, dotPaint);
     }
 
@@ -292,9 +292,9 @@ class NeuralSpherePainter extends CustomPainter {
     final glowPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          Colors.white.withOpacity(0.95),
-          AppColors.cyanBright.withOpacity(0.55),
-          AppColors.cyan.withOpacity(0.0),
+          Colors.white.withValues(alpha: 0.95),
+          AppColors.cyanBright.withValues(alpha: 0.55),
+          AppColors.cyan.withValues(alpha: 0.0),
         ],
         stops: const [0.0, 0.28, 1.0],
       ).createShader(Rect.fromCircle(center: center, radius: maxRadius * 0.35));

@@ -18,18 +18,18 @@ class DashboardScreen extends StatelessWidget {
             colors: [AppColors.background, AppColors.backgroundEnd],
           ),
         ),
-        child: SafeArea(
+        child: const SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(14),
+            padding: EdgeInsets.all(14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const _TopBar(),
-                const SizedBox(height: 14),
+                _TopBar(),
+                SizedBox(height: 14),
                 Expanded(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Expanded(flex: 3, child: _LeftColumn()),
                       SizedBox(width: 14),
                       Expanded(flex: 5, child: _CenterColumn()),
@@ -149,11 +149,11 @@ class _LeftColumn extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          _systemOverviewPanel(),
+          const SizedBox(height: 12),
           _voicePipelinePanel(),
-          const SizedBox(height: 12),
-          _shortTermMemoryPanel(),
-          const SizedBox(height: 12),
-          _longTermMemoryPanel(),
+          const SizedBox(height: 12),          
+          _memorySnapShotPanel(),
           const SizedBox(height: 12),
           _semanticMemoryPanel(),
           const SizedBox(height: 12),
@@ -180,9 +180,9 @@ class _LeftColumn extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text('Listening...', style: AppText.valueSmall),
                         Text('WAKE WORD: JARVIS', style: AppText.label),
                       ],
@@ -227,33 +227,37 @@ class _LeftColumn extends StatelessWidget {
     );
   }
 
-  Widget _shortTermMemoryPanel() {
+  Widget _systemOverviewPanel() {
     return PanelContainer(
-      title: 'SHORT-TERM MEMORY',
+      title: 'SYSTEM OVERVIEW',
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const IconBadge(icon: Icons.donut_large, size: 50),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const LabeledValue(label: 'CONTEXT WINDOW', value: '16K TOKENS', valueFontSize: 14),
-                const SizedBox(height: 8),
+                LabeledValue(label: 'CURRENT OBJECTIVE', value: 'A PROJECT', valueFontSize: 10),
+                SizedBox(height: 8),                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('USAGE', style: AppText.label),
-                    Text('68%', style: AppText.valueSmall),
+                  children: [
+                    Text('SYSTEM HEALTH', style: AppText.label),
+                    Text('100%', style: AppText.valueSmall),
                   ],
                 ),
-                const SizedBox(height: 4),
-                const ProgressBarThin(value: 0.68),
+                SizedBox(height: 4),
+                ProgressBarThin(value: 0.99),
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 20), 
+          const LabeledValue(label: 'REASONING STATE', value: 'DEEP ANALYSIS', valueFontSize: 10),
+          const SizedBox(width: 20), 
+          const LabeledValue(label: 'ACTIVE MODEL', value: 'A MODEL', valueFontSize: 10),
+          const SizedBox(width: 8),          
           MiniChart(
             width: 60,
             height: 34,
@@ -264,18 +268,20 @@ class _LeftColumn extends StatelessWidget {
     );
   }
 
-  Widget _longTermMemoryPanel() {
+  Widget _memorySnapShotPanel() {
     return PanelContainer(
-      title: 'LONG-TERM MEMORY',
+      title: 'MEMORY SNAPSHOT',
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const IconBadge(icon: Icons.storage, size: 50),
           const SizedBox(width: 14),
-          Expanded(
-            child: StatPair(
-              first: const LabeledValue(label: 'ENTRIES', value: '2.4M'),
-              second: const LabeledValue(label: 'USAGE', value: '42%'),
+          const Expanded(
+            child: MultiStat(
+              first: LabeledValue(label: 'WORKING MEMORY', value: '2.4M'),
+              second: LabeledValue(label: 'LONG-TERM MEMORY', value: '42%'),
+              third: LabeledValue(label: 'SEMANTIC RETRIVAL', value: '2.4M'),
+              fourth: LabeledValue(label: 'KNOWLEDGE GRAPH ACTIVITY', value: '42%'),
             ),
           ),
           const SizedBox(width: 8),
@@ -299,10 +305,10 @@ class _LeftColumn extends StatelessWidget {
         children: [
           const IconBadge(icon: Icons.hub_outlined, size: 50),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: StatPair(
-              first: const LabeledValue(label: 'CONCEPTS', value: '128K'),
-              second: const LabeledValue(label: 'LINKS', value: '3.7M'),
+              first: LabeledValue(label: 'CONCEPTS', value: '128K'),
+              second: LabeledValue(label: 'LINKS', value: '3.7M'),
             ),
           ),
           const SizedBox(width: 8),
@@ -331,10 +337,10 @@ class _LeftColumn extends StatelessWidget {
             painter: NetworkGraphPainter(nodeCount: 12, seed: 3),
           ),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: StatPair(
-              first: const LabeledValue(label: 'NODES', value: '9.8M'),
-              second: const LabeledValue(label: 'RELATIONSHIPS', value: '24.6M'),
+              first: LabeledValue(label: 'NODES', value: '9.8M'),
+              second: LabeledValue(label: 'RELATIONSHIPS', value: '24.6M'),
             ),
           ),
         ],
@@ -356,8 +362,8 @@ class _LeftColumn extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               SizedBox(width: 42, child: Text('TIME', style: AppText.label)),
               Expanded(flex: 4, child: Text('EVENT', style: AppText.label)),
               Expanded(flex: 2, child: Text('SOURCE', style: AppText.label)),
@@ -387,13 +393,13 @@ class _CenterColumn extends StatelessWidget {
       children: [
         _aiCoreHeader(),
         const SizedBox(height: 6),
-        Expanded(
+        const Expanded(
           child: AnimatedCoreSection(
             // Rough relative heights of the left/right panels, so the
             // connector nodes land at approximately the right vertical
             // position next to the panel they represent.
-            leftWeights: const [13, 10, 10, 10, 10, 15],
-            rightWeights: const [20, 10, 10, 10, 10, 12],
+            leftWeights: [13, 10, 10, 10, 10, 15],
+            rightWeights: [20, 10, 10, 10, 10, 12],
           ),
         ),
         const SizedBox(height: 6),
@@ -445,7 +451,7 @@ class _CenterColumn extends StatelessWidget {
           const SizedBox(width: 12),
           const Text('67%', style: AppText.valueSmall),
           const SizedBox(width: 12),
-          Expanded(child: ProgressBarThin(value: 0.67, height: 5)),
+          const Expanded(child: ProgressBarThin(value: 0.67, height: 5)),
           const SizedBox(width: 12),
           MiniChart(
             width: 70,
@@ -470,20 +476,20 @@ class _CenterColumn extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     LabeledValue(label: 'TASKS', value: '32'),
                     SizedBox(height: 2),
                     Text('ACTIVE', style: AppText.label),
                   ],
                 ),
               ),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     LabeledValue(label: 'AGENTS', value: '8'),
                     SizedBox(height: 2),
                     Text('ONLINE', style: AppText.label),
@@ -501,9 +507,9 @@ class _CenterColumn extends StatelessWidget {
                       height: 92,
                       painter: GaugePainter(value: 1.0, color: AppColors.cyan, strokeWidth: 6),
                     ),
-                    Column(
+                    const Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Text('HEALTH', style: AppText.label),
                         Text('100%', style: TextStyle(color: AppColors.white, fontSize: 17, fontWeight: FontWeight.w700)),
                         Text('OPTIMAL', style: AppText.greenTag),
@@ -512,20 +518,20 @@ class _CenterColumn extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     LabeledValue(label: 'REQUESTS', value: '1.2K'),
                     SizedBox(height: 2),
                     Text('/min', style: AppText.label),
                   ],
                 ),
               ),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     LabeledValue(label: 'SUCCESS RATE', value: '99.7%', valueColor: AppColors.green),
                     SizedBox(height: 2),
                     Text('↑ 0.3%', style: AppText.greenTag),
@@ -656,10 +662,10 @@ class _RightColumn extends StatelessWidget {
         children: [
           const IconBadge(icon: Icons.home_outlined, size: 50),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: StatPair(
-              first: const LabeledValue(label: 'DEVICES', value: '24', valueColor: AppColors.white),
-              second: const LabeledValue(label: 'ENVIRONMENT', value: '22°C'),
+              first: LabeledValue(label: 'DEVICES', value: '24', valueColor: AppColors.white),
+              second: LabeledValue(label: 'ENVIRONMENT', value: '22°C'),
             ),
           ),
           const SizedBox(width: 8),
@@ -681,10 +687,10 @@ class _RightColumn extends StatelessWidget {
         children: [
           const IconBadge(icon: Icons.code, size: 50),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: StatPair(
-              first: const LabeledValue(label: 'LANGUAGES', value: '12'),
-              second: const LabeledValue(label: 'TESTS', value: '256'),
+              first: LabeledValue(label: 'LANGUAGES', value: '12'),
+              second: LabeledValue(label: 'TESTS', value: '256'),
             ),
           ),
           const SizedBox(width: 8),
@@ -706,10 +712,10 @@ class _RightColumn extends StatelessWidget {
         children: [
           const IconBadge(icon: Icons.remove_red_eye_outlined, size: 50),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: StatPair(
-              first: const LabeledValue(label: 'MODE', value: 'OCR + CV', valueFontSize: 13),
-              second: const LabeledValue(label: 'ACCURACY', value: '98.6%'),
+              first: LabeledValue(label: 'MODE', value: 'OCR + CV', valueFontSize: 13),
+              second: LabeledValue(label: 'ACCURACY', value: '98.6%'),
             ),
           ),
           const SizedBox(width: 8),
@@ -735,9 +741,9 @@ class _RightColumn extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                StatPair(
-                  first: const LabeledValue(label: 'THREAT LEVEL', value: 'LOW', valueColor: AppColors.green, valueFontSize: 13),
-                  second: const LabeledValue(label: 'PERMISSIONS', value: 'ALL SECURE', valueColor: AppColors.green, valueFontSize: 13),
+                const StatPair(
+                  first: LabeledValue(label: 'THREAT LEVEL', value: 'LOW', valueColor: AppColors.green, valueFontSize: 13),
+                  second: LabeledValue(label: 'PERMISSIONS', value: 'ALL SECURE', valueColor: AppColors.green, valueFontSize: 13),
                 ),
                 const SizedBox(height: 10),
                 MiniChart(
@@ -765,10 +771,10 @@ class _RightColumn extends StatelessWidget {
             painter: NetworkGraphPainter(nodeCount: 16, seed: 11),
           ),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 _MiniStatLine(label: 'ACTIVE TASKS', value: '14'),
                 SizedBox(height: 8),
                 _MiniStatLine(label: 'COLLABORATIONS', value: '7'),

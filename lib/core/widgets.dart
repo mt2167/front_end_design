@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
-import 'painters.dart';
 
 /// Standard bordered panel used throughout the dashboard.
 class PanelContainer extends StatelessWidget {
@@ -62,7 +61,7 @@ class IconBadge extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: color.withOpacity(0.55), width: 1.4),
+        border: Border.all(color: color.withValues(alpha: 0.55), width: 1.4),
       ),
       child: Center(
         child: Icon(icon, color: color, size: size * 0.4),
@@ -155,6 +154,35 @@ class StatPair extends StatelessWidget {
   }
 }
 
+/// 4 LabeledValue columns side by side, e.g. ENTRIES / USAGE.
+class MultiStat extends StatelessWidget {
+  final Widget first;
+  final Widget second;
+  final Widget third;
+  final Widget fourth;
+
+  const MultiStat({
+    super.key, 
+    required this.first, 
+    required this.second,
+    required this.third,
+    required this.fourth
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: first),
+        Expanded(child: second),
+        Expanded(child: third),
+        Expanded(child: fourth),
+      ],
+    );
+  }
+}
+
 /// Tool Hub grid icon tile.
 class IconTile extends StatelessWidget {
   final IconData icon;
@@ -209,7 +237,7 @@ class AgentAvatar extends StatelessWidget {
           height: 50,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: AppColors.cyan.withOpacity(0.6), width: 1.2),
+            border: Border.all(color: AppColors.cyan.withValues(alpha: 0.6), width: 1.2),
           ),
           child: Icon(icon, color: AppColors.cyan, size: 19),
         ),
@@ -268,9 +296,9 @@ class LogRow extends StatelessWidget {
             flex: 2,
             child: Text(source, style: AppText.label),
           ),
-          Row(
+          const Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Icon(Icons.check_circle, color: AppColors.green, size: 11),
               SizedBox(width: 3),
               Text('Success', style: AppText.greenTag),

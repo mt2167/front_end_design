@@ -67,7 +67,7 @@ class NeuralNetPainter extends CustomPainter {
       final rotSpeed = [0.05, -0.08, 0.11, -0.14][ringIdx];
       final radius = maxRadius * ringFactor;
       final ringPaint = Paint()
-        ..color = AppColors.cyan.withOpacity(0.4)
+        ..color = AppColors.cyan.withValues(alpha: 0.4)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.3;
       const segments = 44;
@@ -88,7 +88,7 @@ class NeuralNetPainter extends CustomPainter {
 
     // One brighter accent ring with sweeping highlight arcs.
     final accentPaint = Paint()
-      ..color = AppColors.cyanBright.withOpacity(0.6)
+      ..color = AppColors.cyanBright.withValues(alpha: 0.6)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.8
       ..strokeCap = StrokeCap.round;
@@ -170,7 +170,7 @@ class NeuralNetPainter extends CustomPainter {
       final path = Path()
         ..moveTo(p0.dx, p0.dy)
         ..quadraticBezierTo(control.dx, control.dy, p2.dx, p2.dy);
-      canvas.drawPath(path, linePaint..color = AppColors.cyan.withOpacity(0.12));
+      canvas.drawPath(path, linePaint..color = AppColors.cyan.withValues(alpha: 0.12));
     }
 
     // ---- Traveling signal pulses along a subset of synapses ----
@@ -184,7 +184,7 @@ class NeuralNetPainter extends CustomPainter {
       final t = ((time * s.speed) + s.phase) % 1.0;
       final pos = _quadraticPoint(p0, control, p2, t);
       final fade = sin(t * pi); // fades in/out along the path
-      pulsePaint.color = AppColors.cyanBright.withOpacity(0.8 * fade.clamp(0.0, 1.0));
+      pulsePaint.color = AppColors.cyanBright.withValues(alpha: 0.8 * fade.clamp(0.0, 1.0));
       canvas.drawCircle(pos, 2.4, pulsePaint);
     }
 
@@ -198,11 +198,11 @@ class NeuralNetPainter extends CustomPainter {
       final brightness = (1.0 - distFromCenter * 0.6).clamp(0.3, 1.0);
 
       final glowPaint = Paint()
-        ..color = color.withOpacity(0.16 * brightness)
+        ..color = color.withValues(alpha: 0.16 * brightness)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3.5);
       canvas.drawCircle(pos, n.sizeFactor * 4.5 * pulse, glowPaint);
 
-      final dotPaint = Paint()..color = color.withOpacity((0.55 + 0.4 * pulse) * brightness);
+      final dotPaint = Paint()..color = color.withValues(alpha: (0.55 + 0.4 * pulse) * brightness);
       canvas.drawCircle(pos, n.sizeFactor * 1.9, dotPaint);
     }
 
@@ -212,9 +212,9 @@ class NeuralNetPainter extends CustomPainter {
     final glowPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          Colors.white.withOpacity(0.95),
-          AppColors.cyanBright.withOpacity(0.55),
-          AppColors.cyan.withOpacity(0.0),
+          Colors.white.withValues(alpha: 0.95),
+          AppColors.cyanBright.withValues(alpha: 0.55),
+          AppColors.cyan.withValues(alpha: 0.0),
         ],
         stops: const [0.0, 0.28, 1.0],
       ).createShader(Rect.fromCircle(center: center, radius: glowRadius));
